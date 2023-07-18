@@ -8,6 +8,9 @@ class TimePoint:
     x: int
     y: int
 
+    def xy(self):
+        return self.x, self.y
+
 
 @dataclass(frozen=True)
 class Click(TimePoint):
