@@ -1,40 +1,32 @@
-import csv
-from drags import Drag, DragLogger
+from __future__ import annotations
+
+from PIL import ImageGrab
+import cv2
+import numpy as np
+from drags import DragLogger
+from drags.drag import Click
+
+from croppers import NearRangeColorCropper
 
 
-class CsvDragRepository:
-    def __init__(self, file_path: str):
-        self.file_path = file_path
-        with open(file_path, mode="a") as f:
-            writer = csv.writer(f)
-            writer.writerow(
-                [
-                    "click_time",
-                    "click_x",
-                    "click_y",
-                    "release_time",
-                    "release_x",
-                    "release_y",
-                ]
-            )
+def on_press(click: Click):
+    x, y = click.xy()
+    thresh = 5
+    rgb = [51, 204, 255]
 
-    def save(self, drag: Drag):
-        with open(self.file_path, mode="a") as f:
-            writer = csv.writer(f)
-            strformat = "%H:%M:%S.%f"
-            writer.writerow(
-                [
-                    drag.click.time.strftime(strformat),
-                    drag.click.x,
-                    drag.click.y,
-                    drag.release.time.strftime(strformat),
-                    drag.release.x,
-                    drag.release.y,
-                ]
-            )
-        print(f"{drag}")
+    cropper = NearRangeColorCropper(rgb, thresh)
+    screenshot = cv2.cvtColor(np.array(ImageGrab.grab()), cv2.COLOR_BGR2RGB)
+    cusor_nearrange_screen = cropper.crop(screenshot, x, y)
+
+    print(cusor_nearrange_screen)
+
+    if cusor_nearrange_screen is None:
+        return
+
+    cv2.imwrite("sample.png", cusor_nearrange_screen)
 
 
-repository = CsvDragRepository("./sample.csv")
-logger = DragLogger(on_drag=repository.save)
-logger.start()
+if __name__ == "__main__":
+    with DragLogger(on_press=on_press) as logger:
+        logger.join()
+        logger.stop()
