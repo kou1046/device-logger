@@ -14,13 +14,13 @@ class RangePoint:
 
     def __post_init__(self):
         if self.x < 0:
-            self.x = 0
+            object.__setattr__(self, "x", 0)
         if self.y < 0:
-            self.y = 0
+            object.__setattr__(self, "y", 0)
         if self.x > self.WIDTH:
-            self.x = self.WIDTH
+            object.__setattr__(self, "x", self.WIDTH)
         if self.y > self.HEIGHT:
-            self.y = self.HEIGHT
+            object.__setattr__(self, "y", self.HEIGHT)
 
     def __sub__(self, other: RangePoint):
         return RangePoint(self.x - other.x, self.y - other.y)
@@ -32,9 +32,10 @@ class RangePoint:
 class NearRangeCropper:
     """
     周辺の画像を切り抜く役割を果たす．
+
     """
 
-    MERGIN_WIDTH_PIXEL: RangePoint.WIDTH // 4
+    MERGIN_WIDTH_PIXEL = RangePoint.WIDTH // 4
     MARGIN_HEIGHT_PIXEL = 100
 
     @classmethod

@@ -18,9 +18,14 @@ class ColorImageCropper(ImageCropper):
         if not len(target_xs):
             return None
 
-        return image[
+        cropped_image = image[
             target_ys.min() : target_ys.max(), target_xs.min() : target_xs.max()
         ]
+
+        if not len(cropped_image):
+            return None
+
+        return cropped_image
 
     @property
     def min_rgb(self):
