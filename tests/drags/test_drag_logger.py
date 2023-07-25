@@ -17,10 +17,9 @@ class DragLoggerTest(unittest.TestCase):
             nonlocal result
             result = click.xy()
 
-        logger = DragLogger(on_press=_test_press)
-        logger.start()
         expected = (200, 500)
-        pyautogui.click(*expected)
+        with DragLogger(on_press=_test_press):
+            pyautogui.click(*expected)
 
         self.assertEqual(expected, result)
 
@@ -33,13 +32,11 @@ class DragLoggerTest(unittest.TestCase):
             actual_click_pos = drag.click.xy()
             actual_release_pos = drag.release.xy()
 
-        logger = DragLogger(on_drag=_test_drag)
-        logger.start()
         expected_click_pos = (300, 400)
         delta_pos = (100, 50)
-
-        pyautogui.moveTo(expected_click_pos)
-        pyautogui.drag(*delta_pos)
+        with DragLogger(on_drag=_test_drag):
+            pyautogui.moveTo(expected_click_pos)
+            pyautogui.drag(*delta_pos)
 
         expected_release_pos = (
             expected_click_pos[0] + delta_pos[0],

@@ -17,12 +17,15 @@ class DragLogger:
         self.listener = mouse.Listener(on_click=self._on_click())
         self.on_press = on_press
         self.on_drag = on_drag
+        self.is_alive = False
 
     def _on_click(self):
         click_queue: Click | None = None
 
         def __on_click(x: int, y: int, button: mouse.Button, is_press: bool):
             nonlocal click_queue
+            if not self.is_alive:
+                return False
 
             if is_press and button.left and click_queue is None:
                 click_queue = Click(datetime.datetime.now().time(), x, y)
@@ -46,12 +49,16 @@ class DragLogger:
         self.listener.start()
 
     def stop(self):
-        self.listener.stop()
+        self.is_alive = False
+
+    def join(self):
+        self.listener.join()
 
     def __enter__(self):
+        self.is_alive = True
         self.start()
-        self.listener.wait()
-        return self.listener
+        return self
 
     def __exit__(self, exc_type, exc_value, traceback):
+        self.stop()
         return
