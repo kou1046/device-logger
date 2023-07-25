@@ -2,8 +2,8 @@ from __future__ import annotations
 import sys
 
 sys.path.append(".")
-from drags import Drag, DragLogger
-from drags.drag import Click
+from mouse.drags import Drag, DragLogger
+from mouse.drags.drag import Click
 import unittest
 
 import pyautogui

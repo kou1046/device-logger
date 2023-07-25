@@ -6,7 +6,7 @@ sys.path.append(".")
 
 import cv2
 
-from croppers import ColorImageCropper
+from utils.croppers import ColorImageCropper
 
 TEST_YELLOR_RGB = [51, 204, 255]
 THRESHOLD = 5
