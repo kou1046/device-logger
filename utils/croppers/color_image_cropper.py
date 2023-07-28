@@ -18,11 +18,11 @@ class ColorImageCropper(ImageCropper):
         if not len(target_xs):
             return None
 
-        cropped_image = image[
-            target_ys.min() : target_ys.max(), target_xs.min() : target_xs.max()
-        ]
+        cropped_image = image[target_ys.min() : target_ys.max(), target_xs.min() : target_xs.max()]
 
-        if not len(cropped_image):
+        y, x, _ = cropped_image.shape
+
+        if not y or not x:
             return None
 
         return cropped_image
